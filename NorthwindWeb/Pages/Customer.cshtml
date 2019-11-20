@@ -1,0 +1,67 @@
+﻿@page
+@model NorthwindWeb.Pages.CustomerModel
+<div class="row">
+    <h1 class="display-2">@Model.Customer.CompanyName@(Model.Customer.CompanyName.EndsWith('s') ? "'" : "'s") page</h1>
+    <table class="table">
+        <tr>
+            <th colspan="4"><h2>Customer Info</h2></th>
+        </tr>
+        <tr>
+            <th style="width:20%;">Contact</th>
+            <td style="width:30%;">@Model.Customer.ContactName</td>
+            <th style="width:20%;">Title</th>
+            <td style="width:30%;">@Model.Customer.ContactTitle</td>
+        </tr>
+        <tr>
+            <th style="width:20%;">Address</th>
+            <td style="width:30%;">@Model.Customer.Address</td>
+            <th style="width:20%;">Title</th>
+            <td style="width:30%;">@Model.Customer.City</td>
+        </tr>
+        <tr>
+            <th style="width:20%;">Region</th>
+            <td style="width:30%;">@(Model.Customer.Region ?? "N/A")</td>
+            <th style="width:20%;">Postal Code</th>
+            <td style="width:30%;">@(Model.Customer.PostalCode ?? "N/A")</td>
+        </tr>
+        <tr>
+            <th style="width:20%;">Country</th>
+            <td style="width:30%;">@Model.Customer.Country</td>
+            <th style="width:20%;">Phone Number</th>
+            <td style="width:30%;">@Model.Customer.Phone</td>
+        </tr>
+        <tr>
+            <th style="width:20%;">Fax</th>
+            <td colspan="3" style="width:80%;">@(Model.Customer.Fax ?? "N/A")</td>
+        </tr>
+    </table>
+    <br />
+    <h2>Customer orders</h2>
+    @foreach (var order in Model.Customer.Orders)
+    {
+        <table class="table">
+            <tr>
+                <th colspan="2">Order of @order.OrderDate?.ToString("dd MMM yyy")</th>
+            </tr>
+            <tr>
+                <th style="width:60%">@("Shipped " + order.ShippedDate?.ToString("MM/dd/yyyy") ?? "Should arrive before " + order.RequiredDate?.ToString("MM/dd/yyyy"))</th>
+                <td style="width:40%">Total: @order.OrderDetails.Sum(od => od.UnitPrice * od.Quantity).ToString("C")</td>
+            </tr>
+            <tr>
+                <th colspan="2">Detailed order:</th>
+            </tr>
+            <tr>
+                <td style="width:80%">Product</td>
+                <td style="width:20%">Price</td>
+            </tr>
+            @foreach (var orderDetail in order.OrderDetails)
+            {
+                <tr>
+                    <td style="width:80%">@orderDetail.Product.ProductName @(orderDetail.Quantity != 1 ? ("x" + orderDetail.Quantity) : "") @(orderDetail.Discount > 0 ? (orderDetail.Discount * 100 + "% off") : "")</td>
+                    <td style="width:20%">@((orderDetail.UnitPrice * orderDetail.Quantity).ToString("C")) @(orderDetail.Quantity != 1 ? ("(" + orderDetail.UnitPrice.ToString("C") + " each)") : "")</td>
+                </tr>
+            }
+        </table>
+        <br />
+    }
+</div>
